@@ -1,0 +1,6 @@
+# IDE
+.idea
+.vscode
+
+# github token, see https://github.com/dogsheep/github-to-sqlite
+auth.json
