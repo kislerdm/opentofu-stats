@@ -2,7 +2,10 @@ module opentofu-stats
 
 go 1.21.0
 
-require golang.org/x/oauth2 v0.13.0
+require (
+	golang.org/x/oauth2 v0.13.0
+	zombiezen.com/go/sqlite v0.13.1
+)
 
 require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
@@ -18,5 +21,4 @@ require (
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.5.0 // indirect
 	modernc.org/sqlite v1.21.1 // indirect
-	zombiezen.com/go/sqlite v0.13.1 // indirect
 )

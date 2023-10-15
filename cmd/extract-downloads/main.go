@@ -20,7 +20,7 @@ func main() {
 	}
 
 	var dbPath string
-	flag.StringVar(&dbPath, "db", "", "SQLLite DB file")
+	flag.StringVar(&dbPath, "db", "", "Path to the SQLLite DB file.")
 	flag.Parse()
 
 	if dbPath == "" {

@@ -14,10 +14,6 @@ Metrics:
 - [x] Total number of opened PR
 - [x] Total number of closed PR
 - [x] PR time to merge
-
-- [ ] Stargazers new
-- [ ] Total stargazers
-- [ ] Number of forks
-- [ ] Total number of forks
-- [ ] Number of downloads
-- [ ] Total number of downloads
+- [x] Number of new stars
+- [x] Total number of  stars
+- [x] Total number of downloads
