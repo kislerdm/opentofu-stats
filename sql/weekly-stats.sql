@@ -34,7 +34,6 @@ WITH
         FROM committers_first_commit_date
         GROUP BY 1
     ),
-    -- committers which committed in the prev. time frame, e.g. throughout prev. week
     committers_recurrent_raw AS (
         SELECT DISTINCT dates.date
                       , dates.frame
@@ -85,22 +84,6 @@ WITH
         WHERE merged_at IS NOT NULL
         GROUP BY 1
     ),
---     time_to_merge_stat_input AS (
---         SELECT *
---              , ROW_NUMBER() OVER (PARTITION BY date_created ORDER BY time_to_merge_sec) AS rn
---              , COUNT(1) OVER (PARTITION BY date_created)                                AS cnt
---              , AVG(time_to_merge_sec) OVER (PARTITION BY date_created)                  AS mean
---         FROM time_to_merge
---     ),
---     time_to_merge_stat AS (
---         SELECT date_created
---              , AVG(time_to_merge_sec) / 3600. AS hours_median
---              , cnt
---              , mean / 3600.                   AS hours_avg
---         FROM time_to_merge_stat_input
---         WHERE rn = (cnt / 2) + 1 AND cnt % 2 = 1 OR rn IN (cnt / 2, cnt / 2 + 1) AND cnt % 2 = 0
---         GROUP BY 1
---     ),
     pr_opened AS (
         SELECT STRFTIME('%Y-W%W', created_at) AS date
              , COUNT(DISTINCT id)            AS cnt
