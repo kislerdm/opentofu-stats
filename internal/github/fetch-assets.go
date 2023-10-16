@@ -8,10 +8,10 @@ type ReleaseAsset struct {
 	DownloadCount int
 }
 
-func FetchReleaseAssets(client *Client) ([]ReleaseAsset, error) {
-	const query = `{
-  repository(owner: "opentofu", name: "opentofu") {
-    releases(last: 100) {
+func FetchReleaseAssets(client *Client, repoOwner, repoName string) ([]ReleaseAsset, error) {
+	var query = `{
+  repository(owner: "` + repoOwner + `", name: "` + repoName + `") {
+    releases(first: 100) {
       nodes {
         name
         releaseAssets(first: 100) {

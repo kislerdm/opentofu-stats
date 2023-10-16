@@ -8,17 +8,46 @@ REPO := opentofu/opentofu
 SQLLITE_STORE := $(PWD)/data/tofu.db
 JSON_OUT := $(PWD)/data/aggregates.json
 
-.PHONY: extract
-extract: ## Extracts the stats data.
+.PHONY: downloads
+downloads:
+	@ go run cmd/extract-downloads/main.go -db $(SQLLITE_STORE)
+
+.PHONY: stats
+stats:
 	@ github-to-sqlite commits $(SQLLITE_STORE) $(REPO) && \
 		github-to-sqlite issues $(SQLLITE_STORE) $(REPO) && \
 		github-to-sqlite pull-requests $(SQLLITE_STORE) $(REPO) && \
 		github-to-sqlite stargazers $(SQLLITE_STORE) $(REPO) && \
 		github-to-sqlite contributors $(SQLLITE_STORE) $(REPO)
-	@ go run cmd/extract-downloads/main.go -db $(SQLLITE_STORE)
+
+
+.PHONY: extract
+extract: stats downloads ## Extracts the stats data for opentofu/opentofu.
 
 .PHONY: transform
-transform: ## Transforms data.
+transform: ## Transforms data for opentofu/opentofu.
 	@ go run cmd/transform/main.go -db $(SQLLITE_STORE) -out $(JSON_OUT)
+
+SQLLITE_STORE_TF := $(PWD)/data/tf.db
+JSON_OUT_TF := $(PWD)/data/aggregates-tf.json
+
+.PHONY: stats-tf
+stats-tf:
+	@ github-to-sqlite commits $(SQLLITE_STORE_TF) hashicorp/terraform && \
+		github-to-sqlite issues $(SQLLITE_STORE_TF) hashicorp/terraform && \
+		github-to-sqlite pull-requests $(SQLLITE_STORE_TF) hashicorp/terraform && \
+		github-to-sqlite stargazers $(SQLLITE_STORE_TF) hashicorp/terraform && \
+		github-to-sqlite contributors $(SQLLITE_STORE_TF) hashicorp/terraform
+
+.PHONY: downloads-tf
+downloads-tf:
+	@ go run cmd/extract-downloads/main.go -db $(SQLLITE_STORE_TF) -owner hashicorp -name terraform
+
+.PHONY: extract-tf
+extract-tf: stats-tf downloads-tf ## Extracts the stats data for hashicorp/terraform.
+
+.PHONY: transform-tf
+transform-tf: ## Transforms data for hashicorp/terraform.
+	@ go run cmd/transform/main.go -db $(SQLLITE_STORE_TF) -out $(JSON_OUT_TF)
 
 .NOTPARALLEL:

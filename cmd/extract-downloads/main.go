@@ -19,8 +19,14 @@ func main() {
 		log.Fatalf("cannot init github client: %v\n", err)
 	}
 
-	var dbPath string
+	var (
+		dbPath    string
+		repoOwner string
+		repoName  string
+	)
 	flag.StringVar(&dbPath, "db", "", "Path to the SQLLite DB file.")
+	flag.StringVar(&repoOwner, "owner", "opentofu", "GitHub repository owner.")
+	flag.StringVar(&repoName, "name", "opentofu", "GitHub repository name.")
 	flag.Parse()
 
 	if dbPath == "" {
@@ -63,7 +69,7 @@ func main() {
 		log.Fatalf("cannot create the output table '%s': %v\n", table, err)
 	}
 
-	o, err := github.FetchReleaseAssets(client)
+	o, err := github.FetchReleaseAssets(client, repoOwner, repoName)
 	if err != nil {
 		log.Fatalln(err)
 	}
