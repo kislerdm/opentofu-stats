@@ -16,7 +16,7 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-#jobs:
+jobs:
 #  elt:
 #    runs-on: ubuntu-latest
 #    steps:
