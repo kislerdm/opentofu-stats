@@ -1,8 +1,8 @@
+<!--reference: https://www.w3schools.com/w3css/tryw3css_templates_analytics.htm-->
 <!DOCTYPE html>
 <html lang='en'>
 <head>
     <title>OpenTofu Stats</title>
-
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <meta name='description' content='OpenTofu Stats'>
@@ -11,7 +11,6 @@
     <link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
     <script src='https://cdn.plot.ly/plotly-2.26.0.min.js'></script>
-
     <style>
         body{background: #0c192b;color:white}
         .logo {width: 120px}
@@ -47,7 +46,6 @@
                 fill='#0D1A2B'
                 d='m136.289 15.03-.001.013-1.948-1.025.001-.013c.045-.606.518-.868 1.056-.585.538.283.937 1.004.892 1.61Zm3.066 1.77-.001.013-1.948-1.025.001-.013c.045-.606.517-.868 1.055-.585.538.283.938 1.004.893 1.61Z'></path>
     </svg>
-
     </span>
 </div>
 
@@ -303,7 +301,7 @@
         let cadence = `${timeframe}ly`;
         const title = cadence.charAt(0).toUpperCase().concat(cadence.substring(1));
 
-        draw_graph('graph-issues', `${title} Issues distribution`, x_title, 'Count',
+        draw_graph('graph-issues', `${title} issues distribution`, x_title, 'Count',
                 data.timeseries[cadence].date, [
                     new PlotDef(data.timeseries[cadence].issues_new, 'new', '#f39c12'),
                     new PlotDef(data.timeseries[cadence].issues_closed, 'closed', '#28b463'),
@@ -335,5 +333,4 @@
     document.getElementById('ts-month').addEventListener('click', () => redraw('month'));
 </script>
 
-<!--reference: https://www.w3schools.com/w3css/tryw3css_templates_analytics.htm-->
 </html>
