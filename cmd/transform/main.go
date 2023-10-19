@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"text/template"
+	"time"
 
 	"zombiezen.com/go/sqlite"
 	"zombiezen.com/go/sqlite/sqlitex"
@@ -98,7 +99,7 @@ func main() {
 
 		if err := sqlitex.ExecuteTransient(c, query, &sqlitex.ExecOptions{
 			ResultFunc: func(stmt *sqlite.Stmt) error {
-				d.Date = append(d.Date, stmt.ColumnText(0))
+				d.Date = append(d.Date, convertDateMonth(stmt.ColumnText(0)))
 				d.Commits = append(d.Commits, stmt.ColumnInt(1))
 				d.Committers = append(d.Committers, stmt.ColumnInt(2))
 				d.CommittersNew = append(d.CommittersNew, stmt.ColumnInt(3))
@@ -142,6 +143,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("cannot write to file: %v\n", err)
 	}
+}
+
+func convertDateMonth(s string) string {
+	t, err := time.Parse("2006-01", s)
+	if err != nil {
+		return s
+	}
+	return t.Format("2006-Jan")
 }
 
 func generateSummary(v *Output) {
