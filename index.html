@@ -15,6 +15,7 @@
         body{background: #0c192b;color:white}
         .logo {width: 120px}
         .w3-sidebar {background: #282b30}
+        #last-update {font-size: 12px}
     </style>
 </head>
 
@@ -76,6 +77,11 @@
                 class='fa fa-user fa-fw'></i>&nbsp;Committers</a>
         <a href='#commits-ts' class='w3-bar-item w3-button w3-padding'><i class='fa fa-code fa-fw'></i>&nbsp;
             Commits</a>
+    </div>
+    <hr>
+
+    <div class='w3-container'>
+        <div id="last-update">Last update: <span id="last-update-ts"></span></div>
     </div>
 </nav>
 
@@ -203,6 +209,9 @@
             `${data.summary.committers} / ${data.summary.committers_recurrent}`;
     document.getElementById('summary-pr').innerHTML =
             `${data.summary.issues_open} / ${data.summary.pr_open}`;
+
+    // last update
+    document.getElementById('last-update-ts').innerHTML = data.updated_at;
 
     // timeseries graphs
 

@@ -47,6 +47,7 @@ type Summary struct {
 type Output struct {
 	Summary    Summary         `json:"summary"`
 	Timeseries map[string]Data `json:"timeseries"`
+	UpdatedAt  string          `json:"updated_at"`
 }
 
 func main() {
@@ -127,6 +128,7 @@ func main() {
 	}
 
 	generateSummary(&o)
+	o.UpdatedAt = time.Now().UTC().Format(time.RFC3339)
 
 	outBytes, err := json.Marshal(o)
 	if err != nil {
