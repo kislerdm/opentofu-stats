@@ -27,8 +27,12 @@ extract: stats downloads ## Extracts the stats data for opentofu/opentofu.
 
 .PHONY: transform
 transform: ## Transforms data for opentofu/opentofu.
+	@ go run cmd/transform/main.go -db $(SQLLITE_STORE) -out $(JSON_OUT)
+
+.PHONY: generate-html
+generate-html: ## Generates HTML page.
 	@ test -d $(HTML_OUT) || mkdir -p $(HTML_OUT)
-	@ go run cmd/transform/main.go -db $(SQLLITE_STORE) -out $(JSON_OUT) -html $(HTML_OUT)/index.html
+	@ go run cmd/generate-html/main.go -in $(JSON_OUT) -out $(HTML_OUT)/index.html
 
 SQLLITE_STORE_TF := $(PWD)/data/tf.db
 JSON_OUT_TF := $(PWD)/data/aggregates-tf.json

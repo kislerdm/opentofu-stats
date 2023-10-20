@@ -1,3 +1,10 @@
+## v0.0.2
+
+## Fixed
+
+- Added HTML page generation step to embed the aggregates.json to the HTML file in order to eliminate inconsistency caused
+  by the GitHub pages caching.
+
 ## v0.0.1
 
 Initial release. It includes the following graphs and metrics:
