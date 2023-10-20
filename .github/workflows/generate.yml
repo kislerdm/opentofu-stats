@@ -17,7 +17,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  elt:
+  elt-generate:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -47,22 +50,9 @@ jobs:
           git add data/tofu.db data/aggregates.json
           git commit -m "ETL update data $(date -u +'%Y%m%dT%H%M%SZ')"
           git push
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs:
-      - elt
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version-file: "go.mod"
       - name: Generate pages
         run: make generate-html
+      - uses: actions/configure-pages@v3
       - uses: actions/upload-pages-artifact@v2
         with:
           path: public

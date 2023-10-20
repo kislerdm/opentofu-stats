@@ -1,6 +1,7 @@
 # OpenTofu stats
 
-Metrics:
+The repo contains the tools and the pipeline definition to collect the data and calculate the following metrics for the 
+[OpenTofu repository](https://github.com/opentofu/opentofu): 
 
 - [x] Number of commits
 - [x] Numer of committers
