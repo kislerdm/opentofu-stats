@@ -52,11 +52,13 @@ type Output struct {
 
 func main() {
 	var (
-		dbPath  string
-		outPath string
+		dbPath   string
+		outPath  string
+		htmlPath string
 	)
 	flag.StringVar(&dbPath, "db", "", "Path to the SQLLite DB file.")
 	flag.StringVar(&outPath, "out", "/tmp/output.json", "Path to store the calculation results.")
+	flag.StringVar(&htmlPath, "html", "public/index.html", "Path to store generated HTML page.")
 	flag.Parse()
 
 	if dbPath == "" {
@@ -145,6 +147,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("cannot write to file: %v\n", err)
 	}
+
+	fHTML, err := os.OpenFile(htmlPath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("cannot open file for saving HTML page %s: %v\n", htmlPath, err)
+	}
+	defer func() { _ = fHTML.Close() }()
+
+	if err := indexPage.Execute(fHTML, string(outBytes)); err != nil {
+		log.Fatalf("cannot generate HTML page: %v\n", err)
+	}
 }
 
 func convertDateMonth(s string) string {
@@ -176,6 +188,11 @@ var queryTemplate string
 
 var queries = map[string]string{}
 
+//go:embed index.html.templ
+var indexTemplate string
+
+var indexPage = template.Must(template.New("webpage").Parse(indexTemplate))
+
 func init() {
 	queryBuilder := template.Must(template.New("query").Parse(queryTemplate))
 	frameDef := map[string]string{
@@ -189,6 +206,7 @@ func init() {
 		}
 		queries[k] = q
 	}
+
 }
 
 func makeQuery(queryBuilder *template.Template, frame string) (string, error) {

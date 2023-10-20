@@ -200,7 +200,7 @@
 </script>
 
 <script type='module'>
-    import data from './aggregates.json' assert {type: 'json'};
+    const data = {{ . }};
 
     // overall stats
     document.getElementById('summary-stars').innerHTML = data.summary.stars;

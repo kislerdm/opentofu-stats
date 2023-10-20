@@ -7,6 +7,7 @@ help: ## Prints help message.
 REPO := opentofu/opentofu
 SQLLITE_STORE := $(PWD)/data/tofu.db
 JSON_OUT := $(PWD)/data/aggregates.json
+HTML_OUT := $(PWD)/public
 
 .PHONY: downloads
 downloads:
@@ -26,7 +27,8 @@ extract: stats downloads ## Extracts the stats data for opentofu/opentofu.
 
 .PHONY: transform
 transform: ## Transforms data for opentofu/opentofu.
-	@ go run cmd/transform/main.go -db $(SQLLITE_STORE) -out $(JSON_OUT)
+	@ test -d $(HTML_OUT) || mkdir -p $(HTML_OUT)
+	@ go run cmd/transform/main.go -db $(SQLLITE_STORE) -out $(JSON_OUT) -html $(HTML_OUT)/index.html
 
 SQLLITE_STORE_TF := $(PWD)/data/tf.db
 JSON_OUT_TF := $(PWD)/data/aggregates-tf.json
