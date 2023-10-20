@@ -1,0 +1,60 @@
+@startuml
+!include <C4/C4_Container>
+
+title Container diagram of the dashboard delivery system
+footer "<admin@dkisler.com> - %date('yyyy-MM-dd')"
+
+Person(u, "User")
+System_Ext(br, "Web browser")
+
+System_Ext(githubAPI, "GitHub Meta", "Contains the raw data about opentofu/opentofu.")
+System_Ext(pages, "GitHub Pages", "Delivers the html page to end user.")
+System_Ext(repo, "kislerdm/opentofu-stats", "Stores the codebase to generate the dashboard and the acticity data for opentofu/opentofu.")
+
+System_Boundary(n, "GitHub runner") {
+    System_Boundary(1, "Extraction and Load") {
+        Container(ext0, "github-to-sqlite", "Python", "Collects the commits, issues, pull-requests, startgazers and contributors data.")
+        Container(ext1, "cmd/extract-downloads", "Go", "Collects the tofu binary downloads data.")
+    }
+    System_Boundary(2, "Transformation") {
+        Container(transform, "cmd/transform", "Go", "Transforms the raw data and generates the aggregates.json with stats.")
+    }
+    System_Boundary(4, "Generation") {
+        Container(gen, "cmd/generate-html", "Go", "Generates the webpage with the dashboard.")
+    }
+
+    System_Boundary(3, "File system") {
+    ContainerDb(db, "Raw Data", "file/SQLLite", "Stores raw collected data.")
+    ContainerDb(html, "index.html", "file/HTML", "Defines the dashboard.")
+    ContainerDb(json, "aggregates.json", "file/JSON", "Stores the aggregated data.")
+    }
+    System_Ext(publisher, "Delivery System", "Deploys webpage.")
+    Container(git, "Git client", "git", "Commits and pushes the data to the repo.")
+}
+
+Lay_D(ext0, ext1)
+Lay_R(html, json)
+
+Rel_R(ext0, githubAPI, "Reads", "sync, HTTPS/JSON")
+Rel_R(ext1, githubAPI, "Reads", "sync, HTTPS/JSON")
+Rel_L(ext0, db, "Writes", "sync, fs/SQLLite protocol")
+Rel_L(ext1, db, "Writes", "sync, fs/SQLLite protocol")
+Rel_D(transform, db, "Reads", "sync, fs/SQLLite protocol")
+Rel_D(transform, json, "Writes", "sync, fs/JSON")
+
+Rel_D(gen, json, "Reads", "fs/JSON")
+Rel_D(gen, html, "Writes", "fs/HTML")
+
+Rel_D(publisher, html, "Archives", "fs")
+Rel_U(publisher, pages, "Uploads", "sync, HTTPS/binary")
+
+Rel_U(git, db, "Commits changes", "fs")
+Rel_U(git, json, "Commits changes", "fs")
+Rel_D(git, repo, "Pushes", "SSH")
+
+Rel_L(u, br, "Uses to read the dashboard")
+Rel_L(br, pages, "Fetches website assets", "HTTPS")
+
+SHOW_LEGEND()
+
+@enduml

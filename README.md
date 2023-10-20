@@ -18,3 +18,11 @@ The repo contains the tools and the pipeline definition to collect the data and 
 - [x] Number of new stars
 - [x] Total number of  stars
 - [x] Total number of downloads
+
+## Architecture
+
+![architecture](fig/architecture-l2.svg)
+
+## Licence
+
+The codebase is distributed under the [MIT license](LICENSE).
